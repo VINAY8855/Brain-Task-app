@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Docker Hub...
+      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+
+  build:
+    commands:
+      - echo Building Docker image...
+      - docker build -t brain-tasks-app:v1 .
+      - docker tag brain-tasks-app:v1 $DOCKER_USERNAME/brain-tasks-app:v1
+
+  post_build:
+    commands:
+      - echo Pushing Docker image...
+      - docker push $DOCKER_USERNAME/brain-tasks-app:v1
+      - echo Build completed.
+
+artifacts:
+  files:
+    - '**/*'
